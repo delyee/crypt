@@ -7,7 +7,7 @@
 ---
 
 ### Usage:
-<blockquote class="imgur-embed-pub" lang="en" data-id="a/oK6Hg0J" data-context="false" ><a href="//imgur.com/a/oK6Hg0J"></a></blockquote><script async src="//s.imgur.com/min/embed.js" charset="utf-8"></script>
+[](https://imgur.com/QdmVd8Y)
 
 ---
 
