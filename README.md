@@ -6,8 +6,8 @@
 
 ---
 
-### Usage:
-[](https://imgur.com/QdmVd8Y)
+### Video:
+https://imgur.com/QdmVd8Y
 
 ---
 
