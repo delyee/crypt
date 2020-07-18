@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+ <title>mda crypt</title>
+ <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+ <link rel="stylesheet" type="text/css" href="/static/css/mda.css">
+ <script src="static/js/aes.js"></script>
+ <script src="static/js/mda.js"></script>
+ <!-- todo: <script src="static/js/forge-sha256.min.js"></script> -->
+</head>
+<body>
+
+<nav class="navbar navbar-light bg-light justify-content-between">
+  <a class="navbar-brand" href="/">/</a>
+  <form class="form-inline" action="/" method="GET">
+    <input class="form-control mr-sm-2" type="search" name="uuid" minlength="32" maxlength="32" pattern="^[a-zA-Z0-9]+$" placeholder="uuid" aria-label="get">
+    <input class="form-control mr-sm-2" type="password" name="password" maxlength="32" pattern="^[a-zA-Z0-9]+$" placeholder="[a-zA-Z0-9]{0,32}" aria-label="[a-zA-Z0-9]{0,32}">
+    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">get</button>
+  </form>
+</nav>
+
+
+<div class="container h-100">
+<div class="row align-items-center h-100">
+    <div class="col-9 mx-auto">
+{% extends "layout.html" %}
+</div>
+  </div>
+
+
+{% block body %}
+<div class="row align-items-center h-100">
+        <div class="col-9 mx-auto">
+
+<div class="p-2 m-2">
+    <label for="textarea">Clean text</label>
+    <textarea class="form-control" name="textarea" readonly id="textarea" rows="8"></textarea>
+  </div>
+</div>
+</div>
+</div>
+</body>
+<script type="text/javascript">
+ 	document.getElementById("textarea").value = code.decryptMessage('{{ crypt_textarea }}','{{ password }}')
+ </script>
+</html>
+{% endblock %}
