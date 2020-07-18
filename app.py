@@ -23,7 +23,7 @@ tmp_db = []
 DB_PATH = 'db.json'
 db = TinyDB(DB_PATH)
 app = Flask(__name__)
-app.secret_key = b'7Sv2omPuLFt5nL30MqdHBSGmFjNYTnhXwXYPsmJNBEOQBwMSGdlSkVPpaKCEs2N1'
+app.secret_key = b'ChangeThisToken'
 log.basicConfig(level=log.NOTSET, format='[%(levelname)s] %(asctime)s - %(message)s', datefmt='%d-%m-%y %H:%M:%S')
 
 @app.route('/', methods=['GET', 'POST'])
@@ -46,7 +46,7 @@ def index():
             if request.form.get("include_password") == 'on':
                 flash(url_for('index', uuid=__uuid, password=__password))
             else:
-                flash('http://mda.sb.hostcomm.ru/note/' + __uuid)
+                flash(__uuid)
             return redirect(url_for('index'))
             #return redirect(f'/view/{request.form.get("uuid")}/{request.form.get("password")}')
         else:
