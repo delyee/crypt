@@ -18,8 +18,9 @@ from tinydb import TinyDB, Query
 from json import loads
 from uuid import uuid4
 
-BAD_CHARS = ["'", '"', ';', '}', '{', '[', ']', ':', '%', '#']
-tmp_db = []
+# killmeforthiscode ._. 
+BAD_CHARS = ["'", '"', ';', '}', '{', '[', ']', ':', '%', '#', '<', '>']
+#tmp_db = []
 DB_PATH = 'db.json'
 db = TinyDB(DB_PATH)
 app = Flask(__name__)
@@ -31,12 +32,12 @@ def index():
     for i in request.form.values():
         for j in BAD_CHARS:
             if j in i:
-                return 'banned'
+                return redirect(url_for("nope"))
     if request.method == 'GET':
-        if request.args.get('uuid') and len(request.args.get('password')) != 0:
+        if request.args.get('uuid'):
             __note_crypt_textarea = getNote(request.args.get('uuid'))
             if __note_crypt_textarea == None:
-                flash('nope')
+                return redirect(url_for("nope"))
             return render_template('text.html', crypt_textarea=__note_crypt_textarea, password=request.args.get('password'))
         #print(request.headers.get("Referer"))
         return render_template('index.html')
@@ -44,9 +45,10 @@ def index():
         if request.form.get("crypt_textarea") != '' and request.form.get("password") != '':
             __uuid, __password = create_note(request)
             if request.form.get("include_password") == 'on':
-                flash(url_for('index', uuid=__uuid, password=__password))
+                flash(url_for('index', uuid=__uuid, password=__password, _external=True))
             else:
-                flash(__uuid)
+                flash('uuid: {}'.format(__uuid))
+                flash('password: {}'.format(__password))
             return redirect(url_for('index'))
             #return redirect(f'/view/{request.form.get("uuid")}/{request.form.get("password")}')
         else:
@@ -70,6 +72,11 @@ def create_note(request):
     db.insert(_request)
     return _request.get('uuid'), _request.get('password')
 
+@app.route('/nope', methods=['GET', 'POST'])
+def nope():
+    _ = '{}\t{}'.format(request.args, request.headers)
+    log.warning(_)
+    return redirect(url_for("index"))
 
 '''
 for note in tmp_db:

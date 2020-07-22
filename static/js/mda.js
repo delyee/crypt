@@ -18,7 +18,10 @@ function mda_crypt() {
 }
 
 function mda_hash() {
-  document.getElementById("password").value = forge_sha256(document.getElementById("password").value)
+  if (document.getElementById("password").value == '') {
+    document.getElementById("password").value = forge_sha256(document.getElementById("textarea").value);
+    mda_crypt()
+  }
 }
 
 //console.log(code.encryptMessage('Welcome to AES !','your_password'));

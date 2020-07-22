@@ -6,7 +6,7 @@
  <link rel="stylesheet" type="text/css" href="/static/css/mda.css">
  <script src="static/js/aes.js"></script>
  <script src="static/js/mda.js"></script>
- <!-- todo: <script src="static/js/forge-sha256.min.js"></script> -->
+ <script src="static/js/forge-sha256.min.js"></script>
 </head>
 <body>
 
@@ -14,9 +14,9 @@
 
 <nav class="navbar navbar-light bg-light justify-content-between">
   <a class="navbar-brand" href="/">/</a>
-  <form class="form-inline" action="/" method="GET">
-    <input class="form-control mr-sm-2" type="search" name="uuid" minlength="32" maxlength="32" pattern="^[a-zA-Z0-9]+$" placeholder="uuid" aria-label="get">
-    <input class="form-control mr-sm-2" type="password" name="password" maxlength="32" pattern="^[a-zA-Z0-9]+$" placeholder="[a-zA-Z0-9]{0,32}" aria-label="[a-zA-Z0-9]{0,32}">
+  <form class="form-inline" autocomplete="off" action="/" method="GET">
+    <input class="form-control mr-sm-2" type="search" name="uuid" maxlength="64" pattern="^[a-zA-Z0-9]+$" placeholder="uuid">
+    <input class="form-control mr-sm-2" type="password" name="password" maxlength="64" pattern="^[a-zA-Z0-9]+$" placeholder="[a-zA-Z0-9]{0,32}">
     <button class="btn btn-outline-info my-2 my-sm-0" type="submit">get</button>
   </form>
 </nav>
@@ -28,20 +28,22 @@
 {% extends "layout.html" %}
 </div>
   </div>
+</div>
 
 
+<div class="container h-100">
 {% block body %}
     <div class="row align-items-center h-100">
         <div class="col-7 mx-auto">
 
-<form method="POST" action="/">
+<form method="POST" autocomplete="off" action="/">
   <div class="form-group p-2 m-2">
     <label for="textarea">Clean text</label>
     <textarea class="form-control" id="textarea" required oninput="mda_crypt()" rows="5"></textarea>
   </div>
   <div class="form-group p-2 m-2">
     <label for="password">Password</label>
-    <input type="password" class="form-control" name="password" maxlength="32" pattern="^[a-zA-Z0-9]+$" required oninput="mda_crypt()" id="password" placeholder="[a-zA-Z0-9]{0,32} (no spaces or special chars)">
+    <input type="password" class="form-control" name="password" maxlength="64" pattern="^[a-zA-Z0-9]+$" oninput="mda_crypt()" id="password" placeholder="[a-zA-Z0-9]{0,32} (if the field is empty = autogenerate)">
   </div>
   <div class="form-group p-2 m-2">
     <label for="crypt_textarea">Encrypted text</label>
@@ -56,7 +58,7 @@
     <label class="form-check-label" for="include_password">Need include password in link?</label>
   </div>
   <!-- <button type="submit" onclick="mda_hash()" class="btn btn-block btn-info p-1 m-2">Upload&Paste</button> -->
-  <button type="submit" class="btn btn-block btn-info p-1 m-2">Upload&Paste</button>
+  <button type="submit" onclick="mda_hash()" class="btn btn-block btn-info p-1 m-2">Upload&Paste</button>
 </form>
 
 </div>
