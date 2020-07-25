@@ -15,7 +15,7 @@
 from flask import Flask, request, render_template, redirect, url_for, flash
 import logging as log
 from tinydb import TinyDB, Query
-from json import loads
+from json import dumps as json_dumps
 from uuid import uuid4
 
 # killmeforthiscode ._. 
@@ -25,7 +25,7 @@ DB_PATH = 'db.json'
 db = TinyDB(DB_PATH)
 app = Flask(__name__)
 app.secret_key = b'ChangeThisToken'
-log.basicConfig(level=log.NOTSET, format='[%(levelname)s] %(asctime)s - %(message)s', datefmt='%d-%m-%y %H:%M:%S')
+log.basicConfig(level=log.NOTSET, format='[%(levelname)s] %(asctime)s - %(message)s', datefmt='%d-%m-%y %H:%M:%S', filename='notesApp_debug.log')
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -69,13 +69,24 @@ def getNote(_uuid):
 def create_note(request):
     _request = request.form.to_dict()
     _request['uuid'] = uuid4().hex
+    _password = _request.get('password')
+    del(_request['password'])
     db.insert(_request)
-    return _request.get('uuid'), _request.get('password')
+    return _request.get('uuid'), _password
 
 @app.route('/nope', methods=['GET', 'POST'])
 def nope():
-    _ = '{}\t{}'.format(request.args, request.headers)
-    log.warning(_)
+    '''
+    _alert = dict(request.headers.values())
+    _alert.update(dict(request.args.values()))
+    #_args = [i for i in request.args.items()]
+    #_headers.append(_args)
+    #_alert = json_dumps(_headers, sort_keys=True)
+    log.warning(_alert)
+    #print(dir(request.headers))
+    #print(request.headers.values())
+    #print([i for i in request.headers.items()])
+    '''
     return redirect(url_for("index"))
 
 '''
@@ -100,4 +111,4 @@ for note in tmp_db:
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5001)
-    #app.run(debug=True)
+    #app.run(debug=True, port=5001)

@@ -41,7 +41,8 @@
 </div>
 </body>
 <script type="text/javascript">
- 	document.getElementById("textarea").value = code.decryptMessage('{{ crypt_textarea }}','{{ password }}')
+  const urlParams = new URLSearchParams(window.location.search);
+  document.getElementById("textarea").value = code.decryptMessage('{{ crypt_textarea }}', urlParams.get('password'));
  </script>
 </html>
 {% endblock %}

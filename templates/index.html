@@ -37,28 +37,30 @@
         <div class="col-7 mx-auto">
 
 <form method="POST" autocomplete="off" action="/">
-  <div class="form-group p-2 m-2">
+  <div class="form-group">
     <label for="textarea">Clean text</label>
     <textarea class="form-control" id="textarea" required oninput="mda_crypt()" rows="5"></textarea>
   </div>
-  <div class="form-group p-2 m-2">
+  <div class="form-group">
     <label for="password">Password</label>
     <input type="password" class="form-control" name="password" maxlength="64" pattern="^[a-zA-Z0-9]+$" oninput="mda_crypt()" id="password" placeholder="[a-zA-Z0-9]{0,32} (if the field is empty = autogenerate)">
   </div>
-  <div class="form-group p-2 m-2">
+  <div class="form-group">
     <label for="crypt_textarea">Encrypted text</label>
     <textarea class="form-control" name="crypt_textarea" required readonly id="crypt_textarea" rows="3"></textarea>
   </div>
-  <div class="form-check form-check-inline p-1 m-2">
-    <input type="checkbox" class="form-check-input" name="need_delete" checked id="need_delete">
-    <label class="form-check-label" for="need_delete">Delete after reading</label>
+
+
+  <div class="form-group custom-control custom-checkbox custom-control-inline">
+    <input type="checkbox" class="form-control custom-control-input" name="need_delete" checked id="need_delete">
+    <label class="custom-control-label" for="need_delete">Delete after reading</label>
   </div>
-  <div class="form-check form-check-inline p-1 m-1">
-    <input type="checkbox" class="form-check-input" name="include_password" checked id="include_password">
-    <label class="form-check-label" for="include_password">Generate a link</label>
+  <div class="form-group custom-control custom-checkbox custom-control-inline">
+    <input type="checkbox" class="form-control custom-control-input" name="include_password" checked id="include_password">
+    <label class="custom-control-label" for="include_password">Generate "quick" link</label>
   </div>
-  <!-- <button type="submit" onclick="mda_hash()" class="btn btn-block btn-info p-1 m-2">Upload&Paste</button> -->
-  <button type="submit" onclick="mda_hash()" class="btn btn-block btn-info p-1 m-2">Upload&Paste</button>
+
+  <button type="submit" onclick="mda_hash()" class="btn btn-block btn-info">Upload&Paste</button>
 </form>
 
 </div>
