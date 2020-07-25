@@ -1,4 +1,4 @@
-# Crypt (old project)
+# Crypt (old)
 
 
 ### Pic:
