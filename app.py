@@ -89,6 +89,12 @@ def nope():
     '''
     return redirect(url_for("index"))
 
+
+@app.route('/readme')
+def readme():
+    return render_template('README.html')
+
+
 '''
 for note in tmp_db:
         if note.uuid == uuid:
