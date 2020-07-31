@@ -20,7 +20,6 @@ from uuid import uuid4
 
 # killmeforthiscode ._. 
 BAD_CHARS = ["'", '"', ';', '}', '{', '[', ']', ':', '%', '#', '<', '>']
-#tmp_db = []
 DB_PATH = 'db.json'
 db = TinyDB(DB_PATH)
 app = Flask(__name__)
@@ -39,18 +38,15 @@ def index():
             if __note_crypt_textarea == None:
                 return redirect(url_for("nope"))
             return render_template('text.html', crypt_textarea=__note_crypt_textarea, password=request.args.get('password'))
-        #print(request.headers.get("Referer"))
         return render_template('index.html')
     if request.method == 'POST':
         if request.form.get("crypt_textarea") != '':
             __uuid = create_note(request)
             if request.form.get("include_password") == 'on':
                 flash(url_for('index', uuid=__uuid, _external=True))
-                print(url_for('index', uuid=__uuid, _external=True))
             else:
                 flash('uuid: {}'.format(__uuid))
             return redirect(url_for('index'))
-            #return redirect(f'/view/{request.form.get("uuid")}/{request.form.get("password")}')
         else:
             print(request.form)
             return "bad POST request"
