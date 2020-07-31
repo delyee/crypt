@@ -14,14 +14,25 @@ let code = (function(){
 })();
 
 function mda_crypt() {
-  document.getElementById("crypt_textarea").value = code.encryptMessage(document.getElementById("textarea").value,document.getElementById("password").value)
+  if (localStorage.getItem("password")) {
+      document.getElementById("crypt_textarea").value = code.encryptMessage(document.getElementById("textarea").value, localStorage.getItem("password"))
+  }
+  else {
+      document.getElementById("crypt_textarea").value = code.encryptMessage(document.getElementById("textarea").value, document.getElementById("password").value)
+  }
 }
 
-function mda_hash() {
+function mda_submit() {
+  localStorage.clear()
   if (document.getElementById("password").value == '') {
-    document.getElementById("password").value = forge_sha256(document.getElementById("textarea").value);
-    mda_crypt()
+    //document.getElementById("password").value = forge_sha256(document.getElementById("textarea").value);
+    localStorage.setItem('password', forge_sha256(document.getElementById("textarea").value));
+     // fix "nopassword" after submit form
   }
+  else {
+    localStorage.setItem('password', document.getElementById("password").value);
+  }
+  mda_crypt();
 }
 
 //console.log(code.encryptMessage('Welcome to AES !','your_password'));

@@ -13,7 +13,7 @@
 <!-- content -->
 
 <nav class="navbar navbar-light bg-light justify-content-between">
-  <a class="navbar-brand" href="/">/</a>
+  <a class="navbar-brand" href="/readme">/readme</a>
   <form class="form-inline" autocomplete="off" action="/" method="GET">
     <input class="form-control mr-sm-2" type="search" name="uuid" maxlength="64" pattern="^[a-zA-Z0-9]+$" placeholder="uuid">
     <input class="form-control mr-sm-2" type="password" name="password" maxlength="64" pattern="^[a-zA-Z0-9]+$" placeholder="[a-zA-Z0-9]{0,32}">
@@ -43,7 +43,7 @@
   </div>
   <div class="form-group">
     <label for="password">Password</label>
-    <input type="password" class="form-control" name="password" maxlength="64" pattern="^[a-zA-Z0-9]+$" oninput="mda_crypt()" id="password" placeholder="[a-zA-Z0-9]{0,32} (if the field is empty = autogenerate)">
+    <input type="password" class="form-control" maxlength="64" pattern="^[a-zA-Z0-9]+$" oninput="mda_crypt()" id="password" placeholder="[a-zA-Z0-9]{0,32} (if the field is empty = autogenerate)">
   </div>
   <div class="form-group">
     <label for="crypt_textarea">Encrypted text</label>
@@ -60,7 +60,7 @@
     <label class="custom-control-label" for="include_password">Generate "quick" link</label>
   </div>
 
-  <button type="submit" onclick="mda_hash()" class="btn btn-block btn-info">Upload&Paste</button>
+  <button type="submit" onclick="mda_submit()" class="btn btn-block btn-info">Upload&Paste</button>
 </form>
 
 </div>

@@ -42,13 +42,13 @@ def index():
         #print(request.headers.get("Referer"))
         return render_template('index.html')
     if request.method == 'POST':
-        if request.form.get("crypt_textarea") != '' and request.form.get("password") != '':
-            __uuid, __password = create_note(request)
+        if request.form.get("crypt_textarea") != '':
+            __uuid = create_note(request)
             if request.form.get("include_password") == 'on':
-                flash(url_for('index', uuid=__uuid, password=__password, _external=True))
+                flash(url_for('index', uuid=__uuid, _external=True))
+                print(url_for('index', uuid=__uuid, _external=True))
             else:
                 flash('uuid: {}'.format(__uuid))
-                flash('password: {}'.format(__password))
             return redirect(url_for('index'))
             #return redirect(f'/view/{request.form.get("uuid")}/{request.form.get("password")}')
         else:
@@ -69,10 +69,8 @@ def getNote(_uuid):
 def create_note(request):
     _request = request.form.to_dict()
     _request['uuid'] = uuid4().hex
-    _password = _request.get('password')
-    del(_request['password'])
     db.insert(_request)
-    return _request.get('uuid'), _password
+    return _request.get('uuid')
 
 @app.route('/nope', methods=['GET', 'POST'])
 def nope():
@@ -93,6 +91,16 @@ def nope():
 @app.route('/readme')
 def readme():
     return render_template('README.html')
+
+# @app.route('/file/<uuid:uuid>')
+'''@app.route('/file/<string:uuid>')
+def file_download(uuid):
+    # data:image/png;base64, iVBORw0KGgoAAAANSUhE
+    _MimeType = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+    _MessageInBase64 = ''
+    return redirect('data:{_MimeType};base64, {_MessageInBase64}'.format(_MimeType=_MimeType, _MessageInBase64=_MessageInBase64), code=302)
+    # return redirect('data:{_MimeType};base64, {_MessageInBase64}'.format(_MimeType='image/png', _MessageInBase64='iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg=='), code=200)
+'''
 
 
 '''

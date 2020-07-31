@@ -1,18 +1,22 @@
 {% with messages = get_flashed_messages() %}
-	{% if messages %}
-	<!-- <script src="static/js/clipboard.min.js"></script> -->
-    	{% for message in messages %}
-    		<div class="alert alert-info" role="alert">
-    			{% if 'http' in message %}
-    				<p class="mb-0 text-center">Success. Your <a href="{{ message }}" class="alert-link">link</a></p>
-    			{% else %}
-    			<p class="mb-0 text-center">{{ message }}</p>
-    			{% endif %}
-    			<!-- <p class="mb-0 text-center">Success. Your <a href="{{ message }}" class="alert-link">link</a></p> -->
-    			<!-- button for copy link to clipboard -->
-			</div>
-    	{% endfor %}
-  	{% endif %}
+    {% if messages %}
+    <!-- <script src="static/js/clipboard.min.js"></script> -->
+        {% for message in messages %}
+            <div class="alert alert-info" role="alert">
+                {% if 'http' in message %}
+                    <p class="mb-0 text-center">Success. Your <a id="link" name="link" href="" class="alert-link">link</a></p>
+                    <script type="text/javascript">
+                        var link="{{message}}&password=" + localStorage.getItem("password");
+                        document.getElementById("link").setAttribute('href', link);
+                    </script>
+                {% else %}
+                <p class="mb-0 text-center">{{ message }}</p>
+                {% endif %}
+                <!-- <p class="mb-0 text-center">Success. Your <a href="{{ message }}" class="alert-link">link</a></p> -->
+                <!-- button for copy link to clipboard -->
+            </div>
+        {% endfor %}
+    {% endif %}
 {% endwith %}
 {% block body %}
 {% endblock %}
