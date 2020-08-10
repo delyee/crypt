@@ -44,8 +44,12 @@ def index():
             __uuid = create_note(request)
             if request.form.get("include_password") == 'on':
                 flash(url_for('index', uuid=__uuid, _external=True))
+                # stats
+                log.info('Create quick note: {}'.format(__uuid))
             else:
                 flash('uuid: {}'.format(__uuid))
+                # stats
+                log.info('Create normal note: {}'.format(__uuid))
             return redirect(url_for('index'))
         else:
             print(request.form)
