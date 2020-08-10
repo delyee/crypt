@@ -1,23 +1,63 @@
 {% with messages = get_flashed_messages() %}
-    {% if messages %}
+{% if messages %}
     <!-- <script src="static/js/clipboard.min.js"></script> -->
-        {% for message in messages %}
-            <div class="alert alert-info" role="alert">
-                {% if 'http' in message %}
-                    <p class="mb-0 text-center">Success. Your <a id="link" name="link" href="" class="alert-link">link</a></p>
-                    <script type="text/javascript">
-                        var link="{{message}}&password=" + localStorage.getItem("password");
-                        document.getElementById("link").setAttribute('href', link);
-                    </script>
-                {% else %}
-                <p class="mb-0 text-center">{{ message }}</p>
-                {% endif %}
-                <!-- <p class="mb-0 text-center">Success. Your <a href="{{ message }}" class="alert-link">link</a></p> -->
-                <!-- button for copy link to clipboard -->
-            </div>
+    {% for message in messages %}
+            <div class="modal" id="myModal" tabindex="-1" role="dialog">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h6 class="modal-title">Success</h6>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-row align-items-center">
+                                <div class="col-auto">
+                                    <label class="sr-only" for="link">Link</label>
+                                    <input type="text" class="form-control mb-2" id="link" value="empty" readonly>
+                                </div>
+                                <div class="col-auto">
+                                    <button class="btn btn-info btn-primary mb-2" id="btn_link" data-toggle="modal" data-target="#myModal" data-clipboard-target="#link">Copy to clipboard</button>
+                                </div>
+                            </div>
+                            
+                        <!--
+                            <input class="form-control" type="text" id="link" value="empty" readonly>
+                            <button class="btn btn-info" id="btn_link" data-clipboard-target="#link">Copy</button>
+                        -->
+                            
+                        </div>
+                        <!--
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div> -->
+                    </div>
+                </div>
+            {% if 'http' in message %}
+                <script type="text/javascript">
+                var link="{{message}}&password=" + localStorage.getItem("password");
+                document.getElementById("link").setAttribute('value', link);
+                
+                new ClipboardJS('.btn', {
+                container: document.getElementById('btn_link')
+                });
+                $('#myModal').modal()
+                </script>
+            {% else %}
+                <script type="text/javascript">
+                document.getElementById("link").setAttribute('value', "{{ message }}");
+                
+                new ClipboardJS('.btn', {
+                container: document.getElementById('btn_link')
+                });
+                $('#myModal').modal()
+                </script>
+        {% endif %}
+        </div>
+            
         {% endfor %}
     {% endif %}
 {% endwith %}
 {% block body %}
 {% endblock %}
-
