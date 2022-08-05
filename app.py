@@ -1,77 +1,84 @@
-# uuid.uuid4().hex --> '8a0c1722b227489388497600ecf8dae9' // 32 chars
-
-#######################################################
-#    level    |               example                 #
-# ------------| ------------------------------------- #
-#1  CRITICAL  | logging.critical("erase database...") #
-#2  ERROR     | logging.error("db is locked")         #
-#3  WARNING   | logging.warning("detect launch dirb") #
-#4  INFO      | logging.info("admin logout")          #
-#5  DEBUG     | logging.debug(request.values())       #
-# ----------- | ------------------------------------- #
-#######################################################
-
-
 from flask import Flask, request, render_template, redirect, url_for, flash
-import logging as log
-from tinydb import TinyDB, Query
-from json import dumps as json_dumps
+from string import ascii_letters, digits, punctuation
+from json import loads as json_loads, dumps as json_dumps
+from flask_redis import FlaskRedis
+from random import choices
+from loguru import logger
 from uuid import uuid4
+from config import *
 
-# killmeforthiscode ._. 
-BAD_CHARS = ["'", '"', ';', '}', '{', '[', ']', ':', '%', '#', '<', '>']
-DB_PATH = 'db.json'
-db = TinyDB(DB_PATH)
+
 app = Flask(__name__)
-app.secret_key = b'ChangeThisToken'
-log.basicConfig(level=log.NOTSET, format='[%(levelname)s] %(asctime)s - %(message)s', datefmt='%d-%m-%y %H:%M:%S', filename='notesApp_debug.log')
+redis_client = FlaskRedis(app)
+app.secret_key = ''.join(choices(ascii_letters + digits + punctuation, k=64))
 
-@app.route('/', methods=['GET', 'POST'])
+logger.remove()
+logger.add("crypt.log", format="{time} {message}", rotation="1 GB", compression="gz", enqueue=True)
+
+
+@logger.catch
+@app.route('/', methods=['GET', 'POST', 'HEAD'])
 def index():
-    for i in request.form.values():
-        for j in BAD_CHARS:
-            if j in i:
+    for k, v in request.form.items():
+        for bad_char in BAD_CHARS:
+            if bad_char in k or bad_char in v:
                 return redirect(url_for("nope"))
+
+    # GET route
     if request.method == 'GET':
         if request.args.get('uuid'):
-            __note_crypt_textarea = getNote(request.args.get('uuid'))
-            if __note_crypt_textarea == None:
+            __note_crypt_textarea = get_note(request.args.get('uuid'))
+            if not __note_crypt_textarea:
                 return redirect(url_for("nope"))
-            return render_template('text.html', crypt_textarea=__note_crypt_textarea, password=request.args.get('password'))
+            else:
+                return render_template('text.html', crypt_textarea=__note_crypt_textarea, password=request.args.get('password'))
         return render_template('index.html')
+
+    # POST route
     if request.method == 'POST':
-        if request.form.get("crypt_textarea") != '':
+        if request.form.get("crypt_textarea", "") != "":
             __uuid = create_note(request)
             if request.form.get("include_password") == 'on':
                 flash(url_for('index', uuid=__uuid, _external=True))
                 # stats
-                log.info('Create quick note: {}'.format(__uuid))
+                logger.info('Create quick note: {}'.format(__uuid))
             else:
                 flash('uuid: {}'.format(__uuid))
                 # stats
-                log.info('Create normal note: {}'.format(__uuid))
+                logger.info('Create normal note: {}'.format(__uuid))
             return redirect(url_for('index'))
         else:
             print(request.form)
             return "bad POST request"
 
+    # HEAD route
+    if request.method == 'HEAD':
+        return ''
 
-def getNote(_uuid):
-    try:
-        __note = db.search(Query().uuid == _uuid)[0]
-    except:
+
+@logger.catch
+def get_note(_uuid):
+    data = redis_client.get(_uuid)
+    if not data:
         return None
-    if __note.get('need_delete') == 'on':
-        db.remove(Query().uuid == _uuid)
-    return __note.get('crypt_textarea')
+
+    note = json_loads(data)
+
+    if note.get('need_delete') == 'on':
+        del redis_client[_uuid]
+    return note.get('crypt_textarea')
 
 
+@logger.catch
 def create_note(request):
     _request = request.form.to_dict()
-    _request['uuid'] = uuid4().hex
-    db.insert(_request)
-    return _request.get('uuid')
+    _uuid = uuid4().hex
+    _request['uuid'] = _uuid
+    redis_client[_uuid] = json_dumps(_request)
+    return _uuid
 
+
+@logger.catch
 @app.route('/nope', methods=['GET', 'POST'])
 def nope():
     '''
@@ -88,9 +95,15 @@ def nope():
     return redirect(url_for("index"))
 
 
+@logger.catch
 @app.route('/readme')
 def readme():
     return render_template('README.html')
+
+
+'''@app.route('/admin')
+def readme():
+    return render_template('admin.html')'''
 
 # @app.route('/file/<uuid:uuid>')
 '''@app.route('/file/<string:uuid>')
